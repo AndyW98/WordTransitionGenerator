@@ -1,4 +1,4 @@
-IGNORE_GRAMMAR = ['!', '.', ',', '?', ';']
+IGNORE_GRAMMAR = ['!', '.', ',', '?', ';', '/', '-', '\\']
 
 class Reader():
 
@@ -31,3 +31,6 @@ class Reader():
                 self.words[i] = self.words[i].rstrip(grammar)
         while('' in self.words):
             self.words.remove('')
+
+    def get_words(self):
+        return self.words
