@@ -1,3 +1,5 @@
+import csv
+
 class MarkovChain():
 
     def __init__(self):
@@ -6,6 +8,7 @@ class MarkovChain():
         self.num_words = 0
         self.last_word = ''
         self.transitions = []
+        self.transition_matrix = []
 
     def add_word(self, word):
         if word in self.words.keys():
@@ -40,6 +43,35 @@ class MarkovChain():
                     lowest_num = i
             self.transitions.remove(lowest_num)
     
+    def create_transition_matrix(self):
+        first_pass = True
+        for i in range(len(self.table)):
+            self.transition_matrix.append([])
+            for j in range(len(self.table[i])):
+                self.transition_matrix[i].append(self.table[j][i])
+        
+        total = 0
+        for column in self.transition_matrix:
+            for i in column:
+                total += i
+            for i in range(len(column)):
+                if total > 0:
+                    column[i] = column[i] / total
+            total = 0
+
+    def write_to_csv(self):
+        with open("output.csv", 'w+', newline='') as f:
+
+            fieldnames = self.words.keys()
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+            writer.writeheader()
+            for i in range(len(self.transition_matrix[0])):
+                temp = {}
+                for word in self.words.keys():
+                    temp[word] = self.transition_matrix[i][self.words[word]]
+                writer.writerow(temp)
+
     def construct_sentence(self, length=10, starting_word='I'):
         sentence = starting_word
         next_word = self.table[self.words[starting_word]]
