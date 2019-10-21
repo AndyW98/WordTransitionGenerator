@@ -10,9 +10,15 @@ class MarkovChain():
         self.transitions = []
         self.transition_matrix = []
 
+    # Add a new word to the markov chain
+    # @params: word: the new word to add
+    # @return: NONE
     def add_word(self, word):
+        # Checks if the chain already knows the word
         if word in self.words.keys():
             x = self.words[word]
+        # If not, log that word and add it to both the x
+        # and y of the matrix
         else:
             self.words[word] = self.num_words
             self.num_words+=1
@@ -24,6 +30,8 @@ class MarkovChain():
             for i in range(len(self.table)-1):
                 self.table[i].append(0)
         
+        # As long as the new word is not the first word, increment the
+        # corresponding matrix position
         if self.last_word is not '':
             y = self.words[self.last_word]
             self.table[x][y] = self.table[x][y] + 1
@@ -31,6 +39,9 @@ class MarkovChain():
         
         self.last_word = word
 
+    # Keep track of the top 10 transitions as they are entered
+    # @params: transition: the new transition tuple to compare
+    # @return: NONE
     def append_to_transitions(self, transition):
         for i in self.transitions:
             if (i[0] == transition[0]) and (i[1] == transition[1]) and (i[2] < transition[2]):
@@ -43,13 +54,19 @@ class MarkovChain():
                     lowest_num = i
             self.transitions.remove(lowest_num)
     
+    # Creates a matrix to calculate transition percentages
+    # @params: NONE
+    # @return: NONE
     def create_transition_matrix(self):
+
+        # Create the transpose matrix
         first_pass = True
         for i in range(len(self.table)):
             self.transition_matrix.append([])
             for j in range(len(self.table[i])):
                 self.transition_matrix[i].append(self.table[j][i])
         
+        # Change to percentages
         total = 0
         for column in self.transition_matrix:
             for i in column:
@@ -59,6 +76,9 @@ class MarkovChain():
                     column[i] = column[i] / total
             total = 0
 
+    # Saves the transition matrix to a csv file
+    # @params: NONE
+    # @return: NONE
     def write_to_csv(self):
         with open("output.csv", 'w+', newline='') as f:
 
@@ -72,6 +92,10 @@ class MarkovChain():
                     temp[word] = self.transition_matrix[i][self.words[word]]
                 writer.writerow(temp)
 
+    # Construct the most likely sentence based on a starting word
+    # @params: length: size of the constructed sentence
+    #          starting_word: the first word of the sentence
+    # @return: sentece: the generated sentence
     def construct_sentence(self, length=10, starting_word='I'):
         sentence = starting_word
         next_word = self.table[self.words[starting_word]]
