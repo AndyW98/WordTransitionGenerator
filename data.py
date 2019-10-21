@@ -1,4 +1,5 @@
 import csv
+import random
 
 class MarkovChain():
 
@@ -58,7 +59,6 @@ class MarkovChain():
     # @params: NONE
     # @return: NONE
     def create_transition_matrix(self):
-
         # Create the transpose matrix
         first_pass = True
         for i in range(len(self.table)):
@@ -91,6 +91,41 @@ class MarkovChain():
                 for word in self.words.keys():
                     temp[word] = self.transition_matrix[i][self.words[word]]
                 writer.writerow(temp)
+    
+    # Generates a random population vector using the transition matrix
+    # @params: lower: the minimum random number
+    #          upper: the maximum random number
+    #          iterations: the number of multiplications to perform
+    # @returns: vector: the generated population vector
+    def gen_rand_pop_vector(self, lower=0, upper=1, iterations=10):
+        if len(self.transition_matrix):
+            vector = []
+            # Populate the vector with random numbers
+            start_temp = 1
+            for i in range(len(self.transition_matrix)):
+                if i < len(self.transition_matrix) - 1:
+                    vector.append(random.random() % start_temp)
+                    start_temp = start_temp - vector[i]
+                else:
+                    vector.append(start_temp)
+
+            # Multiply the vector by the transition matrix a number of
+            # times equal to iterations
+            temp = 0
+            for _ in range(iterations):
+                for i in range(len(self.transition_matrix)):
+                    for j in range(len(vector)):
+                        temp += vector[j] * self.transition_matrix[j][i]
+                    vector[i] = temp
+                    temp = 0
+                #------
+                total = 0
+                for i in vector:
+                    total += i
+                print(total)
+                #------
+
+        return vector
 
     # Construct the most likely sentence based on a starting word
     # @params: length: size of the constructed sentence

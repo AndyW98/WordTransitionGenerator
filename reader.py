@@ -4,7 +4,7 @@ class Reader():
 
     def __init__(self):
         self.folder = ".\\Training Files\\"
-        self.file = "dracula.txt"
+        self.file = "test.txt"
 
     def read(self, gram_remove=False):
         filepath = self.folder + self.file
