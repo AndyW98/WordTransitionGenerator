@@ -3,7 +3,7 @@ IGNORE_GRAMMAR = ['!', '.', ',', '?', ';', '/', '-', '\\']
 class Reader():
 
     def __init__(self):
-        self.folder = ".\\Training Files\\"
+        self.folder = "./Training Files/"
         self.file = "test.txt"
 
     def read(self, gram_remove=False):

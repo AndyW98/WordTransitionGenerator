@@ -89,7 +89,7 @@ class MarkovChain():
             for i in range(len(self.transition_matrix[0])):
                 temp = {}
                 for word in self.words.keys():
-                    temp[word] = self.transition_matrix[i][self.words[word]]
+                    temp[word] = self.transition_matrix[self.words[word]][i]
                 writer.writerow(temp)
     
     # Generates a random population vector using the transition matrix
@@ -112,18 +112,15 @@ class MarkovChain():
             # Multiply the vector by the transition matrix a number of
             # times equal to iterations
             temp = 0
+            temp_vector=[]
             for _ in range(iterations):
                 for i in range(len(self.transition_matrix)):
                     for j in range(len(vector)):
                         temp += vector[j] * self.transition_matrix[j][i]
-                    vector[i] = temp
+                    temp_vector.append(temp)
                     temp = 0
-                #------
-                total = 0
-                for i in vector:
-                    total += i
-                print(total)
-                #------
+                vector=temp_vector
+                temp_vector=[]
 
         return vector
 

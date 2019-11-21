@@ -15,7 +15,7 @@ def main():
 
     print("Creating Transition Matrix -- ", end='')
     table.create_transition_matrix()
-    #table.write_to_csv()
+    table.write_to_csv()
     print("Complete [75%] -- Saved under \'output.py\'")
 
     print("Generating random population vector -- ", end='')
@@ -26,11 +26,9 @@ def main():
             for j in range(len(TopTen)):
                 if vector[i] > TopTen[j]:
                     temp = TopTen[j]
-                    TopTen[j] = vector[i]
-                    vector[i] = temp
         else:
             TopTen.append(vector[i])
-    print("Top ten population sizes: ", end='')
+    #print("Top ten population sizes: ", end='')
     #print(TopTen)
     print(vector)
     #------
