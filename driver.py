@@ -13,7 +13,8 @@ def main():
 
     if option == str(1):
         csv_file = "output.csv"
-        table.read_from_csv(csv_file)
+        txt_file = "transitions.txt"
+        table.read_from_csv(csv_file, txt_file)
 
     elif option == str(2):
         for word in reader.get_words():
@@ -23,6 +24,8 @@ def main():
         table.create_transition_matrix()
         table.write_to_csv()
         print("\nTransition matrix saved to \'output.csv\'\n")
+        table.write_transitions()
+        print("\nTransitions saved to \'transitions.txt\'\n")
 
     # Find the equilibrium matrix (n = 10 iterations)
     vector = table.gen_rand_pop_vector()

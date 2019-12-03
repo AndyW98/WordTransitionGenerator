@@ -13,8 +13,9 @@ class MarkovChain():
 
     # Reads in from a csv file on disk
     # @params: csv_file: The specified csv file
-    # @return: None
-    def read_from_csv(self, csv_file):
+    #          txt_file: The specified txt file
+    # @return: NONE
+    def read_from_csv(self, csv_file, txt_file):
         with open(csv_file, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             # Get header from first row
@@ -38,6 +39,15 @@ class MarkovChain():
         for i in range(len(headers)):
             self.words[headers[i]] = i
 
+        with open(txt_file, 'r') as f:
+            lines = f.read()
+            lines = lines.split('\n')
+            for line in lines:
+                temp = line.split()
+                if temp != []:
+                    temp_transition = (temp[0], temp[1], temp[2])
+                    self.transitions.append(temp_transition)
+                    
     # Add a new word to the markov chain
     # @params: word: the new word to add
     # @return: NONE
@@ -119,6 +129,15 @@ class MarkovChain():
                     temp[word] = self.transition_matrix[self.words[word]][i]
                 writer.writerow(temp)
     
+    # Saves the top ten transitions to a file
+    # @params: NONE
+    # @return: NONE
+    def write_transitions(self):
+        filename = "transitions.txt"
+        with open(filename, 'w') as f:
+            for transition in self.transitions:
+                f.write(str(transition[0]) + " " + str(transition[1]) + " " + str(transition[2]) + '\n')
+    
     # Generates a random population vector using the transition matrix
     # @params: lower: the minimum random number
     #          upper: the maximum random number
@@ -173,7 +192,7 @@ class MarkovChain():
                 index = self.words[word]
                 # NOTE: This is to weight the vector towards the newest word
                 for i in word_vector:
-                    i = i / 2
+                    i = i / len(word_vector)
                 word_vector[index] += 1
         
         if found is not False:
