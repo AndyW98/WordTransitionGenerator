@@ -1,0 +1,11 @@
+Top ten population sizes:
+('I', 'am', 282)
+('that', 'I', 281)
+('and', 'I', 316)
+('I', 'could', 263)
+('and', 'the', 325)
+('Van', 'Helsing', 280)
+('in', 'the', 560)
+('on', 'the', 299)
+('of', 'the', 851)
+('to', 'the', 362)

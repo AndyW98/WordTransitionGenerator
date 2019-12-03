@@ -1,0 +1,11 @@
+Top ten population sizes: 
+('It', 'was', 176) 
+('I', 'could', 248)
+('of', 'the', 417) 
+('to', 'the', 298)
+('at', 'the', 201)
+('on', 'the', 236)
+('to', 'be', 216)
+('and', 'I', 195)
+('in', 'the', 393)
+('I', 'was', 554)

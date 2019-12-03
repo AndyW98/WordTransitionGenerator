@@ -48,7 +48,7 @@ class MarkovChain():
             if (i[0] == transition[0]) and (i[1] == transition[1]) and (i[2] < transition[2]):
                 self.transitions.remove(i)
         self.transitions.append(transition)
-        if len(self.transitions) > 9:
+        if len(self.transitions) > 10:
             lowest_num = self.transitions[0]
             for i in self.transitions:
                 if i[2] < lowest_num[2]:
@@ -111,35 +111,54 @@ class MarkovChain():
 
             # Multiply the vector by the transition matrix a number of
             # times equal to iterations
-            temp = 0
-            temp_vector=[]
             for _ in range(iterations):
-                for i in range(len(self.transition_matrix)):
-                    for j in range(len(vector)):
-                        temp += vector[j] * self.transition_matrix[j][i]
-                    temp_vector.append(temp)
-                    temp = 0
-                vector=temp_vector
-                temp_vector=[]
+                vector = self.mult_transition_matrix(vector)
 
         return vector
 
-    # Construct the most likely sentence based on a starting word
-    # @params: length: size of the constructed sentence
-    #          starting_word: the first word of the sentence
-    # @return: sentece: the generated sentence
-    def construct_sentence(self, length=10, starting_word='I'):
-        sentence = starting_word
-        next_word = self.table[self.words[starting_word]]
+    # Multiplies a vector into the transition matrix then returns
+    # the resultant vector
+    # @params: vector: The 1 by X matrix to multiply into the transition
+    #          matrix
+    # @return: temp_vector: The modified vector
+    def mult_transition_matrix(self, vector):
+        temp = 0
+        temp_vector = []
+        for i in range(len(self.transition_matrix)):
+            for j in range(len(vector)):
+                temp += vector[j] * self.transition_matrix[j][i]
+            temp_vector.append(temp)
+            temp = 0
+        return temp_vector
+    
+    # Takes in a sentence and predicts the next word
+    # @params: sentence: The input data
+    # @return: next_word: The next predicted word
+    def predict_word(self, sentence):
+        next_word = None
+        found = False
+        words = sentence.split()
+        word_vector = [0] * len(self.words)
 
-        for i in range(length):
-            highest_odds = (next_word[0], 0)
-            for j in range(len(next_word)):
-                if next_word[j] > highest_odds[0]:
-                    highest_odds = (next_word[j], j)
-            for j in self.words.keys():
-                if self.words[j] == highest_odds[1]:
-                    sentence = sentence + " " + j
-            next_word = self.table[highest_odds[1]]
+        for word in words:
+            if word in self.words.keys():
+                found = True
+                index = self.words[word]
+                # NOTE: This is to weight the vector towards the newest word
+                for i in word_vector:
+                    i = i / 2
+                word_vector[index] += 1
+        
+        if found is not False:
+            word_vector = self.mult_transition_matrix(word_vector)
 
-        return sentence
+        temp = (word_vector[0], 0,)
+        for i in range(len(word_vector)):
+            if word_vector[i] > temp[0]:
+                temp = (word_vector[i], i,)
+        
+        for word in self.words.keys():
+            if self.words[word] == temp[1]:
+                next_word = word
+
+        return next_word
