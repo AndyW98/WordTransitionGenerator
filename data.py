@@ -11,6 +11,33 @@ class MarkovChain():
         self.transitions = []
         self.transition_matrix = []
 
+    # Reads in from a csv file on disk
+    # @params: csv_file: The specified csv file
+    # @return: None
+    def read_from_csv(self, csv_file):
+        with open(csv_file, 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            # Get header from first row
+            headers = next(reader)
+            
+            matrix = []
+            for i in range(len(headers)):
+                matrix.append([])
+            i = 0
+            while True:
+                try:
+                    data = next(reader)
+                except:
+                    break
+
+                for j in range(len(data)):
+                    matrix[j].append(float(data[j]))
+        
+        self.transition_matrix = matrix
+        self.num_words = len(self.table)
+        for i in range(len(headers)):
+            self.words[headers[i]] = i
+
     # Add a new word to the markov chain
     # @params: word: the new word to add
     # @return: NONE
@@ -152,13 +179,13 @@ class MarkovChain():
         if found is not False:
             word_vector = self.mult_transition_matrix(word_vector)
 
-        temp = (word_vector[0], 0,)
-        for i in range(len(word_vector)):
-            if word_vector[i] > temp[0]:
-                temp = (word_vector[i], i,)
-        
-        for word in self.words.keys():
-            if self.words[word] == temp[1]:
-                next_word = word
+            temp = (word_vector[0], 0,)
+            for i in range(len(word_vector)):
+                if word_vector[i] > temp[0]:
+                    temp = (word_vector[i], i,)
+            
+            for word in self.words.keys():
+                if self.words[word] == temp[1]:
+                    next_word = word
 
         return next_word
