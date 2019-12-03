@@ -23,12 +23,14 @@ def main():
         # Construct the transition matrix and write it to a file
         table.create_transition_matrix()
         table.write_to_csv()
-        print("\nTransition matrix saved to \'output.csv\'\n")
+        print("\nTransition matrix saved to \'output.csv\'")
         table.write_transitions()
-        print("\nTransitions saved to \'transitions.txt\'\n")
+        print("Transitions saved to \'transitions.txt\'")
 
-    # Find the equilibrium matrix (n = 10 iterations)
+    # Find the equilibrium matrix
     vector = table.gen_rand_pop_vector()
+    print("\nEquilibrium vector: ")
+    print(vector)
 
     print("\nTop ten population sizes: ")
     TopTen = table.transitions
